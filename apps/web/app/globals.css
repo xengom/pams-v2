@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TweakCN-style theme system */
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+
+    /* PAMS-specific colors */
+    --success: 142.1 76.2% 36.3%;
+    --success-foreground: 355.7 100% 97.3%;
+    --warning: 47.9 95.8% 53.1%;
+    --warning-foreground: 26 83.3% 14.1%;
+    --info: 199.2 89.1% 48.4%;
+    --info-foreground: 210 40% 98%;
+
+    /* Account type colors */
+    --asset: 142.1 76.2% 36.3%; /* Green for assets */
+    --liability: 0 84.2% 60.2%; /* Red for liabilities */
+    --equity: 221.2 83.2% 53.3%; /* Blue for equity */
+    --revenue: 142.1 76.2% 36.3%; /* Green for revenue */
+    --expense: 0 84.2% 60.2%; /* Red for expenses */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    /* PAMS dark theme colors */
+    --success: 142.1 70.6% 45.3%;
+    --success-foreground: 144.9 80.4% 10%;
+    --warning: 47.9 95.8% 53.1%;
+    --warning-foreground: 26 83.3% 14.1%;
+    --info: 199.2 89.1% 48.4%;
+    --info-foreground: 210 40% 98%;
+
+    /* Account type colors - dark theme */
+    --asset: 142.1 70.6% 45.3%;
+    --liability: 0 62.8% 30.6%;
+    --equity: 217.2 91.2% 59.8%;
+    --revenue: 142.1 70.6% 45.3%;
+    --expense: 0 62.8% 30.6%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html {
+    @apply h-full;
+  }
+  
+  html, body, #__next {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  /* Custom component styles */
+  .account-card {
+    @apply bg-card border border-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  .transaction-item {
+    @apply border-b border-border last:border-b-0 py-3 hover:bg-muted/50 transition-colors;
+  }
+  
+  .stat-card {
+    @apply bg-gradient-to-br from-card to-muted/20 border border-border rounded-xl p-6 shadow-sm;
+  }
+  
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center gap-1 text-xs font-medium py-2 px-1 rounded-lg transition-colors;
+  }
+  
+  .mobile-nav-item.active {
+    @apply bg-primary text-primary-foreground;
+  }
+  
+  .balance-positive {
+    @apply text-asset;
+  }
+  
+  .balance-negative {
+    @apply text-liability;
+  }
+  
+  .account-asset {
+    @apply text-asset border-asset/20 bg-asset/5;
+  }
+  
+  .account-liability {
+    @apply text-liability border-liability/20 bg-liability/5;
+  }
+  
+  .account-equity {
+    @apply text-equity border-equity/20 bg-equity/5;
+  }
+  
+  .account-revenue {
+    @apply text-revenue border-revenue/20 bg-revenue/5;
+  }
+  
+  .account-expense {
+    @apply text-expense border-expense/20 bg-expense/5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

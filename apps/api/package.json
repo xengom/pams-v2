@@ -1,0 +1,30 @@
+{
+  "name": "@pams/api",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc",
+    "deploy": "wrangler deploy",
+    "type-check": "tsc --noEmit",
+    "db:push": "cd ../../packages/database && pnpm db:push",
+    "db:migrate": "cd ../../packages/database && pnpm db:migrate",
+    "db:studio": "cd ../../packages/database && pnpm db:studio"
+  },
+  "dependencies": {
+    "@pams/database": "workspace:*",
+    "@pams/types": "workspace:*",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
+    "drizzle-orm": "^0.29.1",
+    "graphql": "^16.8.1",
+    "graphql-yoga": "^5.1.0",
+    "hono": "^3.11.7",
+    "nanoid": "^5.0.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.22.1"
+  }
+}

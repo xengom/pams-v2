@@ -1,0 +1,17 @@
+{
+  "name": "@pams/seed",
+  "version": "0.0.0",
+  "scripts": {
+    "seed": "tsx seed.ts"
+  },
+  "dependencies": {
+    "@pams/database": "workspace:*",
+    "@pams/types": "workspace:*",
+    "drizzle-orm": "^0.29.1",
+    "nanoid": "^5.0.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
+  }
+}

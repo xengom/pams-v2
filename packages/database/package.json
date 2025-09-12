@@ -1,0 +1,21 @@
+{
+  "name": "@pams/database",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "db:push": "drizzle-kit push",
+    "db:push:prod": "drizzle-kit push --config=drizzle.prod.config.ts",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@pams/types": "workspace:*",
+    "drizzle-orm": "^0.29.1",
+    "nanoid": "^5.0.4"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.6",
+    "typescript": "^5.3.3"
+  }
+}
