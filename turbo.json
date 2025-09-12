@@ -4,7 +4,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "out/**"]
+    },
+    "build:cf": {
+      "dependsOn": ["^build"],
+      "outputs": ["out/**"]
+    },
+    "clean": {
+      "cache": false
     },
     "dev": {
       "cache": false,

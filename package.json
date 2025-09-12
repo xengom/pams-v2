@@ -4,11 +4,15 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "build:cf": "turbo run build:cf",
+    "clean": "turbo run clean",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",
-    "db:studio": "turbo run db:studio"
+    "db:studio": "turbo run db:studio",
+    "deploy:web": "turbo run build:cf --filter=@pams/web && cd apps/web && npx wrangler pages deploy out --project-name=pams-web",
+    "deploy:api": "turbo run build --filter=@pams/api && cd apps/api && pnpm run deploy"
   },
   "devDependencies": {
     "turbo": "latest"

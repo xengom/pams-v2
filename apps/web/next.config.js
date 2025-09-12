@@ -1,6 +1,11 @@
 ;;/** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ['@pams/types'],
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
   async rewrites() {
     return [
       {
