@@ -8,7 +8,8 @@
     "type-check": "tsc --noEmit",
     "db:push": "cd ../../packages/database && pnpm db:push",
     "db:migrate": "cd ../../packages/database && pnpm db:migrate",
-    "db:studio": "cd ../../packages/database && pnpm db:studio"
+    "db:studio": "cd ../../packages/database && pnpm db:studio",
+    "test:balance": "npx tsx src/scripts/test-balance-calculations.ts"
   },
   "dependencies": {
     "@pams/database": "workspace:*",

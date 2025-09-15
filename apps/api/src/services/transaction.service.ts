@@ -5,12 +5,15 @@ import type { Database } from '../db/connection';
 import { transactions, accounts } from '../db/schema';
 import type { CreateTransactionInput, UpdateTransactionInput } from '@pams/types';
 import { AccountService } from './account.service';
+import { BalanceService } from './balance.service';
 
 export class TransactionService {
   private accountService: AccountService;
+  private balanceService: BalanceService;
 
   constructor(private db: Database) {
     this.accountService = new AccountService(db);
+    this.balanceService = new BalanceService(db);
   }
 
   async getAllTransactions(page = 1, limit = 20) {
@@ -85,7 +88,7 @@ export class TransactionService {
     await this.db.insert(transactions).values(transactionData);
     
     // Update account balances
-    await this.updateAccountBalances(input.debitAccountId, input.creditAccountId, input.amount);
+    await this.balanceService.updateAccountBalancesFromTransaction(input.debitAccountId, input.creditAccountId, input.amount);
     
     return await this.getTransactionById(id);
   }
@@ -97,10 +100,11 @@ export class TransactionService {
     }
 
     // Reverse the old transaction balances
-    await this.updateAccountBalances(
+    await this.balanceService.updateAccountBalancesFromTransaction(
       existingTransaction.debitAccountId,
       existingTransaction.creditAccountId,
-      -existingTransaction.amount
+      existingTransaction.amount,
+      true // isReversal
     );
 
     // Validate new transaction if accounts or amount changed
@@ -126,7 +130,7 @@ export class TransactionService {
       .where(eq(transactions.id, id));
 
     // Apply new transaction balances
-    await this.updateAccountBalances(debitAccountId, creditAccountId, amount);
+    await this.balanceService.updateAccountBalancesFromTransaction(debitAccountId, creditAccountId, amount);
 
     return await this.getTransactionById(id);
   }
@@ -138,10 +142,11 @@ export class TransactionService {
     }
 
     // Reverse the transaction balances
-    await this.updateAccountBalances(
+    await this.balanceService.updateAccountBalancesFromTransaction(
       existingTransaction.debitAccountId,
       existingTransaction.creditAccountId,
-      -existingTransaction.amount
+      existingTransaction.amount,
+      true // isReversal
     );
 
     await this.db.delete(transactions).where(eq(transactions.id, id));
@@ -188,7 +193,7 @@ export class TransactionService {
       await this.db.insert(transactions).values(transactionData);
       
       // Update account balances
-      await this.updateAccountBalances(
+      await this.balanceService.updateAccountBalancesFromTransaction(
         transactionData.debitAccountId,
         transactionData.creditAccountId,
         transactionData.amount
@@ -229,23 +234,7 @@ export class TransactionService {
     }
   }
 
-  private async updateAccountBalances(debitAccountId: string, creditAccountId: string, amount: number) {
-    // Get current balances
-    const debitAccount = await this.accountService.getAccountById(debitAccountId);
-    const creditAccount = await this.accountService.getAccountById(creditAccountId);
 
-    if (!debitAccount || !creditAccount) {
-      throw new Error('Account not found during balance update');
-    }
-
-    // Update debit account (increase balance for assets/expenses, decrease for liabilities/equity/revenue)
-    const debitBalanceChange = ['ASSET', 'EXPENSE'].includes(debitAccount.type) ? amount : -amount;
-    await this.accountService.updateBalance(debitAccountId, debitAccount.balance + debitBalanceChange);
-
-    // Update credit account (decrease balance for assets/expenses, increase for liabilities/equity/revenue)
-    const creditBalanceChange = ['ASSET', 'EXPENSE'].includes(creditAccount.type) ? -amount : amount;
-    await this.accountService.updateBalance(creditAccountId, creditAccount.balance + creditBalanceChange);
-  }
 
   async getTransactionsByDateRange(startDate: Date, endDate: Date) {
     const start = formatInTimeZone(startDate, 'Asia/Seoul', "yyyy-MM-dd'T'00:00:00.000'Z'");

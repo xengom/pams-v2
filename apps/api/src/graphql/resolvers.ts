@@ -3,6 +3,8 @@ import { AccountService } from '../services/account.service';
 import { TransactionService } from '../services/transaction.service';
 import { StatisticsService } from '../services/statistics.service';
 import { PlanningService } from '../services/planning.service';
+import { BalanceService } from '../services/balance.service';
+import { BalanceTestUtility } from '../utils/balance-test';
 import { exchangeRateService } from '../services/exchange-rate';
 
 // Custom DateTime scalar
@@ -207,6 +209,51 @@ export const resolvers = {
     deleteTransaction: async (_: any, { id }: { id: string }, { db }: any) => {
       const transactionService = new TransactionService(db);
       return await transactionService.deleteTransaction(id);
+    },
+
+    // Balance management mutations
+    recalculateAccountBalance: async (_: any, { accountId }: { accountId: string }, { db }: any) => {
+      const balanceService = new BalanceService(db);
+      const newBalance = await balanceService.calculateAccountBalance(accountId);
+      
+      // Update the account with recalculated balance
+      const accountService = new AccountService(db);
+      await accountService.updateBalance(accountId, newBalance);
+      
+      return {
+        accountId,
+        previousBalance: null, // Could be fetched if needed
+        newBalance,
+        success: true
+      };
+    },
+
+    recalculateAllAccountBalances: async (_: any, __: any, { db }: any) => {
+      const balanceService = new BalanceService(db);
+      const results = await balanceService.recalculateAllAccountBalances();
+      
+      return {
+        totalAccounts: results.length,
+        updatedAccounts: results.filter(r => r.balanceChanged).length,
+        results,
+        success: true
+      };
+    },
+
+    validateAccountBalances: async (_: any, __: any, { db }: any) => {
+      const balanceService = new BalanceService(db);
+      return await balanceService.validateAccountBalances();
+    },
+
+    // Balance testing mutations (for development/debugging)
+    runBalanceTests: async (_: any, __: any, { db }: any) => {
+      const balanceTestUtility = new BalanceTestUtility(db);
+      return await balanceTestUtility.runBalanceTests();
+    },
+
+    generateBalanceReport: async (_: any, __: any, { db }: any) => {
+      const balanceTestUtility = new BalanceTestUtility(db);
+      return await balanceTestUtility.generateBalanceReport();
     },
 
     // Fixed expense mutations

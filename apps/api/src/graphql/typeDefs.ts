@@ -138,6 +138,90 @@ export const typeDefs = /* GraphQL */ `
     total: Float!
   }
 
+  # Balance Management Types
+  type BalanceCalculationResult {
+    accountId: ID!
+    previousBalance: Float
+    newBalance: Float!
+    balanceChanged: Boolean!
+  }
+
+  type BalanceRecalculationResponse {
+    totalAccounts: Int!
+    updatedAccounts: Int!
+    results: [BalanceCalculationResult!]!
+    success: Boolean!
+  }
+
+  type BalanceValidationIssue {
+    accountId: ID!
+    accountName: String!
+    expectedBalance: Float!
+    actualBalance: Float!
+    difference: Float!
+  }
+
+  type BalanceValidationResponse {
+    isValid: Boolean!
+    issues: [BalanceValidationIssue!]!
+    totalAccountsChecked: Int!
+    accountsWithIssues: Int!
+  }
+
+  type SingleBalanceRecalculationResponse {
+    accountId: ID!
+    previousBalance: Float
+    newBalance: Float!
+    success: Boolean!
+  }
+
+  # Balance Testing Types
+  type BalanceTestResult {
+    testName: String!
+    passed: Boolean!
+    details: String
+    error: String
+  }
+
+  type BalanceTestResponse {
+    totalTests: Int!
+    passedTests: Int!
+    failedTests: Int!
+    results: [BalanceTestResult!]!
+  }
+
+  type BalanceReportSummary {
+    totalAccounts: Int!
+    totalTransactions: Int!
+    totalDebits: Float!
+    totalCredits: Float!
+    balanceCheckPassed: Boolean!
+  }
+
+  type BalanceReportAccount {
+    accountId: ID!
+    accountName: String!
+    accountType: String!
+    currentBalance: Float!
+    calculatedBalance: Float!
+    difference: Float!
+    transactionCount: Int!
+  }
+
+  type BalanceReportIssue {
+    accountId: ID!
+    accountName: String!
+    issue: String!
+    expectedBalance: Float!
+    actualBalance: Float!
+  }
+
+  type BalanceReportResponse {
+    summary: BalanceReportSummary!
+    accountDetails: [BalanceReportAccount!]!
+    validationIssues: [BalanceReportIssue!]!
+  }
+
   # Input Types
   input CreateAccountInput {
     code: String!
@@ -276,5 +360,14 @@ export const typeDefs = /* GraphQL */ `
 
     # Card management mutations
     updateCardDiscount(input: UpdateCardDiscountInput!): CardMonthlyData!
+
+    # Balance management mutations
+    recalculateAccountBalance(accountId: ID!): SingleBalanceRecalculationResponse!
+    recalculateAllAccountBalances: BalanceRecalculationResponse!
+    validateAccountBalances: BalanceValidationResponse!
+
+    # Balance testing mutations (for development/debugging)
+    runBalanceTests: BalanceTestResponse!
+    generateBalanceReport: BalanceReportResponse!
   }
 `;
